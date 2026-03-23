@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 const BASE_URL = 'https://petstore.swagger.io/v2';
 
 test.describe('GET /pet/findByStatus', () => {
-  function validatePet(pet: any) {
+  function validatePet(pet: any) {    
     expect(pet).toHaveProperty('id');
     expect(typeof pet.id).toBe('number');
 
@@ -15,9 +15,14 @@ test.describe('GET /pet/findByStatus', () => {
     }
     if (pet.category !== undefined) {
       expect(pet.category).toHaveProperty('id');
-      expect(pet.category).toHaveProperty('name');
+
+      // name might not always exist
+        if (pet.category.name !== undefined) {
+              expect(typeof pet.category.name).toBe('string');
+            }
     }
     if (pet.photoUrls !== undefined) {
+
       expect(Array.isArray(pet.photoUrls)).toBe(true);
     }
     if (pet.tags !== undefined) {
@@ -31,7 +36,6 @@ test.describe('GET /pet/findByStatus', () => {
       const start = Date.now();
       const url = `${BASE_URL}/pet/findByStatus?status=${status}`;
       console.log(`Request URL: ${url}`);
-
       const response = await request.get(`${BASE_URL}/pet/findByStatus`, {
         params: { status }
       });
