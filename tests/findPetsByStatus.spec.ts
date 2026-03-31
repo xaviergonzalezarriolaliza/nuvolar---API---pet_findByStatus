@@ -16,7 +16,7 @@ test.describe('GET /pet/findByStatus', () => {
     if (pet.category !== undefined) {
       expect(pet.category).toHaveProperty('id');
 
-      // name might not always exist
+      // name might not always exist <-----
         if (pet.category.name !== undefined) {
               expect(typeof pet.category.name).toBe('string');
             }
@@ -143,18 +143,34 @@ test.describe('GET /pet/findByStatus', () => {
     expect(response.status()).toBe(405);
   });
 
-  test('should handle extremely long status string gracefully (returns 200)', async ({ request }) => {
-    const longStatus = 'a'.repeat(1000);
-    const url = `${BASE_URL}/pet/findByStatus?status=${longStatus}`;
-    console.log(`Request URL: ${url}`);
+  const aiGeneratedEdgeCases = [
+    { name: 'extremely long string', value: 'a'.repeat(1000) },
+    { name: 'SQL injection attempt', value: "' OR '1'='1" },
+    { name: 'XSS payload', value: '<script>alert(1)</script>' },
+    { name: 'Encoded special chars', value: '%E2%98%BA' }, // Smiley face
+    { name: 'Null byte injection', value: 'available%00' },
+    { name: 'Path traversal attempt', value: '../../../../etc/passwd' }
+  ];
 
-    const response = await request.get(`${BASE_URL}/pet/findByStatus`, {
-      params: { status: longStatus }
+  for (const edgeCase of aiGeneratedEdgeCases) {
+    test(`AI Edge Case: ${edgeCase.name} should return 200 (API behavior)`, async ({ request }, testInfo) => {
+      const url = `${BASE_URL}/pet/findByStatus?status=${edgeCase.value}`;
+      console.log(`Request URL: ${url}`);
+
+      const response = await request.get(`${BASE_URL}/pet/findByStatus`, {
+        params: { status: edgeCase.value }
+      });
+
+      await testInfo.attach('request_details', {
+        body: `Testing ${edgeCase.name} with value: ${edgeCase.value}`,
+        contentType: 'text/plain'
+      });
+
+      expect(response.status()).toBe(200);
+      const pets = await response.json();
+      expect(Array.isArray(pets)).toBe(true);
     });
-    expect(response.status()).toBe(200);
-    const pets = await response.json();
-    expect(Array.isArray(pets)).toBe(true);
-  });
+  }
 
   test('should handle non-string status parameter (e.g., number) as 200', async ({ request }) => {
     const url = `${BASE_URL}/pet/findByStatus?status=123`;
