@@ -150,6 +150,10 @@ test.describe('GET /pet/findByStatus', () => {
     expect(response.status()).toBe(405);
   });
 
+  /**
+   * SECTION: LLM-Generated Edge Cases
+   * These test cases were generated using Gemini to identify unconventional inputs and potential security risks.
+   */
   const aiGeneratedEdgeCases = [
     { name: 'extremely long string', value: 'a'.repeat(1000) },
     { name: 'SQL injection attempt', value: "' OR '1'='1" },
@@ -159,6 +163,10 @@ test.describe('GET /pet/findByStatus', () => {
     { name: 'Path traversal attempt', value: '../../../../etc/passwd' }
   ];
 
+  /**
+   * LLM DATA-DRIVEN LOOP
+   * Dynamically generates tests for each AI-provided edge case.
+   */
   for (const edgeCase of aiGeneratedEdgeCases) {
     test(`AI Edge Case: ${edgeCase.name} should return 200 (API behavior)`, async ({ request }, testInfo) => {
       const url = `${BASE_URL}/pet/findByStatus?status=${edgeCase.value}`;
