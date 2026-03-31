@@ -1,3 +1,10 @@
+/**
+ * LLM-Powered API Testing Improvements
+ * 
+ * - Added a data-driven test loop using AI-generated edge cases.
+ * - Expanded test coverage to include security injections (SQLi, XSS) and data integrity scenarios.
+ * - Documented the AI integration strategy and specific prompts in README.md.
+ */
 import { test, expect } from '@playwright/test';
 
 const BASE_URL = 'https://petstore.swagger.io/v2';
