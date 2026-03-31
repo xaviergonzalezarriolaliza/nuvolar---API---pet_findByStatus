@@ -21,7 +21,7 @@ The test suite in `tests/findPetsByStatus.spec.ts` now includes a data-driven lo
 - **Security Injection:** SQL injection and XSS payload attempts.
 - **Data Integrity:** Null byte injections and path traversal attempts.
 - **Encoding:** URL-encoded special characters and emoji support.
-- **Stress:** Extremely long string parameters (1000+ characters).
+- **Stress:** Extremely long string parameters (1000+ characters)
 
 ### Prompts Used for Generation
 1. **OpenAPI Analysis Prompt:**
